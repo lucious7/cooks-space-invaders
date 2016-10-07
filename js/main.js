@@ -80,7 +80,8 @@ Player.prototype.update = function(){
             this.center.x += 2;
         } 
     }
-    if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE)){
+    if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE) ||
+        this.keyboarder.isDown(this.keyboarder.KEYS.UP)){
         if(this.bulletDelay <= 0){
             this.game.addBody(new Bullet(this.game, 
                                         {x: this.center.x, y: this.center.y - this.size.y}, 
@@ -159,7 +160,7 @@ function drawBody(screen, body){
 };
 
 function Keyboarder(){
-    this.KEYS = {LEFT: 37, RIGHT: 39, SPACE: 32};
+    this.KEYS = {LEFT: 37, UP: 38, RIGHT: 39, SPACE: 32};
     var keyState = {};
     window.addEventListener("keydown", function(e){
         keyState[e.keyCode] = true;
