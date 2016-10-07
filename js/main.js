@@ -71,10 +71,14 @@ function Player(game){
 
 Player.prototype.update = function(){
     if(this.keyboarder.isDown(this.keyboarder.KEYS.LEFT)){
-        this.center.x -= 2;
+        if(this.center.x - this.size.x/2 > 0){
+            this.center.x -= 2;
+        }
     }
     if(this.keyboarder.isDown(this.keyboarder.KEYS.RIGHT)){
-        this.center.x += 2;
+        if(this.center.x + this.size.x/2 < this.game.canvas.width){
+            this.center.x += 2;
+        } 
     }
     if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE)){
         if(this.bulletDelay <= 0){
