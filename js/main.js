@@ -26,6 +26,15 @@ function Game(parent){
 };
 
 Game.prototype.update = function(){
+    var self = this;
+    function notCollidingWith(b1){
+        return self.bodies.filter(function(b2){
+            return isColliding(b1, b2);
+        }).length === 0;
+    };
+
+    this.bodies = this.bodies.filter(notCollidingWith);
+
     for (var i = 0; i < this.bodies.length; i++) {
         this.bodies[i].update();
     }
@@ -36,6 +45,18 @@ Game.prototype.draw = function(screen){
     for (var i = 0; i < this.bodies.length; i++) {
         this.bodies[i].draw(screen);
     }
+};
+
+Game.prototype.addBody = function(body){
+    this.bodies.push(body);
+};
+
+Game.prototype.invadersBelow = function(invader){
+    return this.bodies.filter(function(i){
+        return i instanceof Invader && 
+               i.center.y > invader.center.y && 
+               Math.abs(i.center.x - invader.center.x) > invader.size.x;
+    }).length > 0;
 };
 
 function Player(game){
@@ -51,6 +72,11 @@ Player.prototype.update = function(){
     }
     if(this.keyboarder.isDown(this.keyboarder.KEYS.RIGHT)){
         this.center.x += 2;
+    }
+    if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE)){
+        this.game.addBody(new Bullet(this.game, 
+                                    {x: this.center.x, y: this.center.y - this.size.y}, 
+                                    {x: 0, y: -6}));
     }
 };
 
@@ -72,6 +98,12 @@ Invader.prototype.update = function(){
     }
     this.center.x += this.speedX;
     this.patrolX += this.speedX;
+
+    if(Math.random() > 0.995 && !this.game.invadersBelow(this)){
+        this.game.addBody(new Bullet(this.game, 
+                                    {x: this.center.x, y: this.center.y + this.size.y}, 
+                                    {x: 0, y: 2}));
+    }
 };
 
 Invader.prototype.draw = function(screen){
@@ -89,6 +121,22 @@ function createInvaders(game){
 
     return invaders;
 }
+
+function Bullet(game, center, velocity){
+    this.game = game;
+    this.size = {x: 3, y: 3};
+    this.center = center;
+    this.velocity = velocity;
+};
+
+Bullet.prototype.update = function(){
+    this.center.x += this.velocity.x;
+    this.center.y += this.velocity.y;
+};
+
+Bullet.prototype.draw = function(screen){
+    drawBody(screen, this);
+};
 
 function drawBody(screen, body){
     screen.fillRect(body.center.x - body.size.x/2, 
@@ -110,3 +158,11 @@ function Keyboarder(){
         return keyState[keyCode];
     };
 };
+
+function isColliding(b1, b2){
+    return !( b1 === b2 ||
+            b1.center.x + b1.size.x/2 <= b2.center.x + b2.size.x/2 ||
+            b1.center.y + b1.size.y/2 <= b2.center.y + b2.size.y/2 ||
+            b1.center.x - b1.size.x/2 >= b2.center.x - b2.size.x/2 ||
+            b1.center.y - b1.size.y/2 >= b2.center.y - b2.size.y/2 );
+}
