@@ -27,13 +27,15 @@ function Game(parent){
 
 Game.prototype.update = function(){
     var self = this;
-    function notCollidingWith(b1){
-        return self.bodies.filter(function(b2){
-            return isColliding(b1, b2);
-        }).length === 0;
-    };
+    this.bodies.forEach(function(b1){
+        self.bodies.forEach(function(b2){
+            if(isColliding(b1,b2)){
+                b1.colliding = b2.colliding = true;
+            }
+        });
+    });
 
-    this.bodies = this.bodies.filter(notCollidingWith);
+    this.bodies = this.bodies.filter(function(b){ return !b.colliding; });
 
     for (var i = 0; i < this.bodies.length; i++) {
         this.bodies[i].update();
@@ -64,6 +66,7 @@ function Player(game){
     this.size = {x: 15, y: 15};
     this.center = {x: game.center.x, y: game.size.y - 15};
     this.keyboarder = new Keyboarder();
+    this.bulletDelay = 0;
 };
 
 Player.prototype.update = function(){
@@ -74,10 +77,14 @@ Player.prototype.update = function(){
         this.center.x += 2;
     }
     if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE)){
-        this.game.addBody(new Bullet(this.game, 
-                                    {x: this.center.x, y: this.center.y - this.size.y}, 
-                                    {x: 0, y: -6}));
+        if(this.bulletDelay <= 0){
+            this.game.addBody(new Bullet(this.game, 
+                                        {x: this.center.x, y: this.center.y - this.size.y}, 
+                                        {x: 0, y: -6}));
+            this.bulletDelay = 30
+        }
     }
+    this.bulletDelay--;
 };
 
 Player.prototype.draw = function(screen){
@@ -161,8 +168,8 @@ function Keyboarder(){
 
 function isColliding(b1, b2){
     return !( b1 === b2 ||
-            b1.center.x + b1.size.x/2 <= b2.center.x + b2.size.x/2 ||
-            b1.center.y + b1.size.y/2 <= b2.center.y + b2.size.y/2 ||
-            b1.center.x - b1.size.x/2 >= b2.center.x - b2.size.x/2 ||
-            b1.center.y - b1.size.y/2 >= b2.center.y - b2.size.y/2 );
+        b1.center.x + b1.size.x/2 <= b2.center.x + b2.size.x/2 ||
+        b1.center.y + b1.size.y/2 <= b2.center.y + b2.size.y/2 ||
+        b1.center.x - b1.size.x/2 >= b2.center.x - b2.size.x/2 ||
+        b1.center.y - b1.size.y/2 >= b2.center.y - b2.size.y/2 );
 }
