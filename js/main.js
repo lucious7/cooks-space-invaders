@@ -12,7 +12,8 @@ function Game(parent){
     this.size = {x: this.canvas.width, y: this.canvas.height};
     this.center = {x: this.size.x/2, y: this.size.y/2};
 
-    this.bodies = [new Player(this)];
+    this.bodies = createInvaders(this); 
+    this.bodies.push(new Player(this));
 
     var self = this;
     function tick(){
@@ -56,6 +57,38 @@ Player.prototype.update = function(){
 Player.prototype.draw = function(screen){
     drawBody(screen, this);
 };
+
+function Invader(game, center){
+    this.game = game;
+    this.size = {x: 15, y: 15};
+    this.center = center;
+    this.patrolX = 0;
+    this.speedX = 0.3;
+};
+
+Invader.prototype.update = function(){
+    if(this.patrolX < 0 || this.patrolX > 40){
+        this.speedX = -this.speedX;
+    }
+    this.center.x += this.speedX;
+    this.patrolX += this.speedX;
+};
+
+Invader.prototype.draw = function(screen){
+    drawBody(screen, this);
+};
+
+function createInvaders(game){
+    var invaders = [];
+
+    for (var i = 0; i < 24; i++) {
+        var x = 30 + i % 8 * 30;
+        var y = 30 + i % 3 * 30;
+        invaders.push(new Invader(game, {x: x, y: y}));
+    }
+
+    return invaders;
+}
 
 function drawBody(screen, body){
     screen.fillRect(body.center.x - body.size.x/2, 
