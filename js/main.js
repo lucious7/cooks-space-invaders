@@ -88,6 +88,7 @@ Player.prototype.update = function(){
 };
 
 Player.prototype.draw = function(screen){
+    screen.fillStyle = "rgb(0, 0, 0)";
     drawBody(screen, this);
 };
 
@@ -114,6 +115,7 @@ Invader.prototype.update = function(){
 };
 
 Invader.prototype.draw = function(screen){
+    screen.fillStyle = "rgb(0, 200, 0)";
     drawBody(screen, this);
 };
 
@@ -142,6 +144,7 @@ Bullet.prototype.update = function(){
 };
 
 Bullet.prototype.draw = function(screen){
+    screen.fillStyle = "rgb(200, 0, 0)";
     drawBody(screen, this);
 };
 
