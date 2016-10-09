@@ -2,7 +2,7 @@ function Player(game){
     this.fillStyle = "rgb(255, 255, 255)";
     this.game = game;
     this.size = {x: 15, y: 15};
-    this.center = {x: game.center.x, y: game.size.y - this.size.y};
+    this.center = {x: game.center.x, y: game.size.y - this.size.y * 2.5};
     this.keyboarder = new Keyboarder();
     this.bulletDelay = 0;
     this.shootSound = document.createElement("audio");

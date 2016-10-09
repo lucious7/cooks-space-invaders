@@ -1,7 +1,7 @@
 function Game(parent){
     this.canvas = document.createElement("canvas");
-    this.canvas.width = 310;
-    this.canvas.height = 310;
+    this.canvas.width = 400;
+    this.canvas.height = 400;
     this.ctx = this.canvas.getContext("2d");
     parent.appendChild(this.canvas);
 
@@ -48,7 +48,7 @@ Game.prototype.update = function(){
 
     if(this.bodies.filter(b => b instanceof Invader).length === 0){
         this.status = "WON";
-    } else if(this.bodiesColliding.includes(this.player)){
+    } else if(this.bodiesColliding.includes(this.player) || this.invadersBelow(this.player)){
         this.status = "LOSE";
     } else {
         for (var i = 0; i < this.bodies.length; i++) {
@@ -57,10 +57,12 @@ Game.prototype.update = function(){
     }
 };
 
+var background = document.createElement("img");
+background.src = "img/night-sky.jpg";
+
 Game.prototype.draw = function(){
     var screen = this.ctx;
-    screen.fillStyle = "rgb(0,0,0)";
-    screen.fillRect(0, 0, this.size.x, this.size.y);
+    screen.drawImage(background, 0, 0, this.size.x, this.size.y);
     for (var i = 0; i < this.bodies.length; i++) {
         this.bodies[i].draw(screen);
     }

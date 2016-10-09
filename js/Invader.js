@@ -8,9 +8,9 @@ function Invader(game, center){
 };
 
 Invader.prototype.update = function(){
-    if(this.patrolX < 0 || this.patrolX > 40){
-        this.speedX = -this.speedX;
-        this.center.y += this.size.y;
+    if(this.patrolX < -20 || this.patrolX > 150){
+        this.speedX = -(Math.abs(this.speedX * 1.5) > 2 ? this.speedX : this.speedX * 1.5);
+        this.center.y += this.size.y; 
     }
     this.center.x += this.speedX;
     this.patrolX += this.speedX;
