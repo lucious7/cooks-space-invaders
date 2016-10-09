@@ -42,7 +42,8 @@ Game.prototype.update = function(){
         });
     });
 
-    this.bodiesColliding = this.bodies.concat(this.bodiesColliding).filter(function(b){ return b.colliding && b.explosionStep!=0; });
+    this.bodiesColliding = this.bodies.concat(this.bodiesColliding)
+                                .filter(function(b){ return b.colliding && b.explosionStep!=0; });
     this.bodies = this.bodies.filter(function(b){ return !b.colliding; });
 
     if(this.bodies.filter(b => b instanceof Invader).length === 0){
@@ -82,14 +83,14 @@ Game.prototype.invadersBelow = function(invader){
 
 Game.prototype.gameOver = function(){
     console.log("GAME OVER!!!");
-    this.ctx.font = 30+this.finalDelay + "px Verdana"
-    this.ctx.fillStyle = "rgba(255, 255, 255,0.5)";
-    this.ctx.fillText("GAME OVER...", this.center.x - this.size.x/4, this.center.y);
+    this.ctx.font = 30+this.finalDelay + "px Verdana";
+    this.ctx.strokeStyle = "rgba(255, 255, 255,0.5)";
+    this.ctx.strokeText("GAME OVER...", this.center.x - this.size.x/3, this.center.y);
 };
 
 Game.prototype.victory = function(){
     console.log("VICTORY!!!");
-    this.ctx.font = 30+this.finalDelay + "px Arial"
-    this.ctx.fillStyle = "rgba(255, 255, 255,0.5)";
-    this.ctx.fillText("YOU WON...", this.center.x - this.size.x/4, this.center.y);
+    this.ctx.font = 30+this.finalDelay + "px Arial";
+    this.ctx.strokeStyle = "rgba(255, 255, 255,0.5)";
+    this.ctx.strokeText("YOU WON...", this.center.x - this.size.x/4, this.center.y);
 };
