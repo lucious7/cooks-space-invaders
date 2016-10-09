@@ -10,6 +10,7 @@ function Invader(game, center){
 Invader.prototype.update = function(){
     if(this.patrolX < 0 || this.patrolX > 40){
         this.speedX = -this.speedX;
+        this.center.y += this.size.y;
     }
     this.center.x += this.speedX;
     this.patrolX += this.speedX;
