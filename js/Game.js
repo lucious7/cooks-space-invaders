@@ -46,9 +46,13 @@ Game.prototype.update = function(){
                                 .filter(function(b){ return b.colliding && b.explosionStep!=0; });
     this.bodies = this.bodies.filter(function(b){ return !b.colliding; });
 
+    var p = {center: {x: this.player.center.x - this.player.size.x/2, 
+                      y: this.player.center.y - this.player.size.y/2}, 
+             size: this.player.size};
+
     if(this.bodies.filter(b => b instanceof Invader).length === 0){
         this.status = "WON";
-    } else if(this.bodiesColliding.includes(this.player) || this.invadersBelow(this.player)){
+    } else if(this.bodiesColliding.includes(this.player) || this.invadersBelow(p)){
         this.status = "LOSE";
     } else {
         for (var i = 0; i < this.bodies.length; i++) {
